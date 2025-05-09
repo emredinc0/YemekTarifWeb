@@ -1,0 +1,6 @@
+@YemekTarifiSitesi.API_HostAddress = http://localhost:5110
+
+GET {{YemekTarifiSitesi.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
