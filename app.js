@@ -10,6 +10,7 @@ let ingredients = [];
 const ingredientInput = document.getElementById('ingredientInput');
 const ingredientTags = document.getElementById('ingredientTags');
 const findRecipesBtn = document.getElementById('findRecipesBtn');
+const addIngredientBtn = document.getElementById('addIngredientBtn');
 
 const loadingDiv = document.getElementById("loading");
 const recipesRow = document.getElementById("recipesRow");
@@ -31,15 +32,50 @@ let jwtToken = localStorage.getItem('jwtToken') || null;
 function setUser(user, token) {
     currentUser = user;
     jwtToken = token;
-    if (token) localStorage.setItem('jwtToken', token);
-    else localStorage.removeItem('jwtToken');
+    if (user && token) {
+        localStorage.setItem('jwtToken', token);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+    } else {
+        localStorage.removeItem('jwtToken');
+        localStorage.removeItem('currentUser');
+    }
     renderUserArea();
 }
 
 function renderUserArea() {
     const userArea = document.getElementById('userArea');
     if (currentUser) {
-        userArea.innerHTML = `<span class="me-2">👋 <b>${currentUser.userName}</b></span><button class="btn btn-outline-danger btn-sm" id="logoutBtn">Çıkış Yap</button>`;
+        userArea.innerHTML = `
+            <div class="dropdown">
+                <button class="btn btn-outline-dark dropdown-toggle" id="userDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" style="margin-right:6px; vertical-align:middle;"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-2.2 3.6-4 8-4s8 1.8 8 4v1H4v-1z"/></svg>
+                    <b>${currentUser.userName}</b>
+                </button>
+                <ul class="dropdown-menu show" id="userDropdownMenu" style="display:none; position:absolute; right:0; top:40px; min-width:180px; z-index:10000;">
+                    <li><a class="dropdown-item" href="#" id="profileMenuProfile">Profilim</a></li>
+                    <li><a class="dropdown-item" href="#" id="profileMenuFavorites">Favorilerim</a></li>
+                    <li><a class="dropdown-item" href="#" id="profileMenuComments">Yaptığım Yorumlar</a></li>
+                    <li><a class="dropdown-item" href="#" id="profileMenuRated">Puanladığım Tarifler</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="#" id="logoutBtn">Çıkış Yap</a></li>
+                </ul>
+            </div>
+        `;
+        // Menü açma/kapama
+        const dropdownBtn = document.getElementById('userDropdownBtn');
+        const dropdownMenu = document.getElementById('userDropdownMenu');
+        dropdownBtn.onclick = function(e) {
+            e.stopPropagation();
+            dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block';
+        };
+        document.body.addEventListener('click', function() {
+            dropdownMenu.style.display = 'none';
+        });
+        // Modal açıcılar
+        document.getElementById('profileMenuProfile').onclick = function(e) { e.preventDefault(); openProfileModal('profile'); };
+        document.getElementById('profileMenuFavorites').onclick = function(e) { e.preventDefault(); openProfileModal('favorites'); };
+        document.getElementById('profileMenuComments').onclick = function(e) { e.preventDefault(); openProfileModal('comments'); };
+        document.getElementById('profileMenuRated').onclick = function(e) { e.preventDefault(); openProfileModal('rated'); };
         document.getElementById('logoutBtn').onclick = () => { setUser(null, null); };
     } else {
         userArea.innerHTML = `<button class="btn btn-primary" id="loginBtn">Giriş Yap / Kayıt Ol</button>`;
@@ -72,15 +108,24 @@ document.getElementById('loginBtn') && (document.getElementById('loginBtn').oncl
 
 document.getElementById('loginForm').onsubmit = async function(e) {
     e.preventDefault();
-    const email = document.getElementById('loginEmail').value.trim();
+    const emailOrUserName = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
     try {
         const res = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ emailOrUserName, password })
         });
-        if (!res.ok) throw new Error((await res.json()).message || 'Giriş başarısız');
+        if (!res.ok) {
+            let errorText = await res.text();
+            let errorMsg;
+            try {
+                errorMsg = JSON.parse(errorText).message;
+            } catch {
+                errorMsg = errorText;
+            }
+            throw new Error(errorMsg || 'Giriş başarısız');
+        }
         const data = await res.json();
         setUser(data.user, data.token);
         closeAuthModal();
@@ -129,8 +174,9 @@ window.fetch = async (input, init = {}) => {
 
 // Sayfa yüklendiğinde kullanıcıyı localStorage'dan yükle
 (function() {
-    if (jwtToken) {
-        // Token'dan kullanıcı adını decode etmek için basit bir yol (güvenli değil, demo amaçlı)
+    if (localStorage.getItem('currentUser')) {
+        currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    } else if (jwtToken) {
         try {
             const payload = JSON.parse(atob(jwtToken.split('.')[1]));
             currentUser = { userName: payload['unique_name'] || payload['name'], email: payload['email'] };
@@ -150,8 +196,21 @@ function requireLogin(action) {
 
 // Fetch recipes from API
 document.addEventListener("DOMContentLoaded", async () => {
-    await fetchRecipes();
     setupEvents();
+    // URL'den kategori parametresi oku
+    const params = new URLSearchParams(window.location.search);
+    const cat = params.get('category');
+    if (cat) {
+        selectedCategory = cat;
+        await fetchRecipes();
+        filterAndRender();
+        const recipesSection = document.querySelector('.container.mb-5');
+        if (recipesSection) {
+            recipesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    } else {
+        await fetchRecipes();
+    }
 });
 
 async function fetchRecipes() {
@@ -159,12 +218,15 @@ async function fetchRecipes() {
     recipesRow.innerHTML = "";
     try {
         const res = await fetch(API_URL);
+        if (!res.ok) throw new Error('API bağlantısı başarısız');
         const data = await res.json();
         allRecipes = data;
         filteredRecipes = allRecipes;
         renderRecipes();
+        renderDailyMenuBox();
+        renderCalorieBox();
     } catch (e) {
-        loadingDiv.innerHTML = "Tarifler yüklenemedi.";
+        loadingDiv.innerHTML = "Tarifler yüklenemedi. Lütfen bağlantınızı ve sunucu durumunu kontrol edin.";
     }
 }
 
@@ -191,6 +253,11 @@ function renderRecipes() {
                 </div>
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title text-truncate">${title}</h5>
+                    <div style="font-size:0.98em; color:#666; margin-bottom:6px;">
+                        <span style="margin-right:10px;"><b>Zorluk:</b> ${recipe.difficulty || 'Kolay'}</span>
+                        <span style="margin-right:10px;"><b>Süre:</b> ${recipe.duration || 30} dk</span>
+                        <span><b>Kişi:</b> ${recipe.servings || 4}</span>
+                    </div>
                     <p class="card-text flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">${description}</p>
                     <button class="btn btn-warning w-100 show-recipe-btn" data-id="${recipe.id}">
                         <i class="bi bi-book me-2"></i>Tarifi Gör
@@ -233,7 +300,7 @@ window.showRecipeModal = async function(id) {
         ? `<ul>${recipe.ingredients.split('\\n').map(i => `<li>${i.trim()}</li>`).join('')}</ul>`
         : "";
     const instructionsHtml = recipe.instructions
-        ? `<ol>${recipe.instructions.split('\\n').map(i => `<li>${i.trim()}</li>`).join('')}</ol>`
+        ? `<ol>${recipe.instructions.split('\\n').map(i => `<li>${i.trim().replace(/^\d+\.?\s*/, '')}</li>`).join('')}</ol>`
         : "";
     let commentsHtml = '<div id="commentsSection"><div class="text-center text-muted">Yorumlar yükleniyor...</div></div>';
     let ratingHtml = `<div id="ratingSection" class="mb-3"><div class="text-center text-muted">Puanlar yükleniyor...</div></div>`;
@@ -245,10 +312,13 @@ window.showRecipeModal = async function(id) {
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div class="d-flex align-items-center">
                 <span class="badge bg-warning text-dark me-2" style="font-size: 0.9rem; padding: 8px 12px; border-radius: 12px;">
-                    <i class="bi bi-clock me-1"></i> 45 dk
+                    <i class="bi bi-clock me-1"></i> ${recipe.duration || 30} dk
                 </span>
-                <span class="badge bg-info text-dark" style="font-size: 0.9rem; padding: 8px 12px; border-radius: 12px;">
-                    <i class="bi bi-people me-1"></i> 4 Kişilik
+                <span class="badge bg-info text-dark me-2" style="font-size: 0.9rem; padding: 8px 12px; border-radius: 12px;">
+                    <i class="bi bi-bar-chart me-1"></i> ${recipe.difficulty || 'Kolay'}
+                </span>
+                <span class="badge bg-primary text-light" style="font-size: 0.9rem; padding: 8px 12px; border-radius: 12px;">
+                    <i class="bi bi-people me-1"></i> ${recipe.servings || 4} Kişilik
                 </span>
             </div>
             <button class="btn ${favClass} btn-lg" id="modalFavoriteBtn" style="border-radius: 12px; padding: 8px 16px;">
@@ -312,7 +382,7 @@ window.showRecipeModal = async function(id) {
         await fetch(`${API_BASE_URL}/comments`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ recipeId: id, content })
+            body: JSON.stringify({ recipeId: id, content, userName: currentUser.userName })
         });
         document.getElementById("commentContent").value = "";
         await loadAndRenderComments(id);
@@ -364,7 +434,7 @@ async function loadAndRenderRating(recipeId) {
                 await fetch(`${API_BASE_URL}/ratings`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ recipeId, value })
+                    body: JSON.stringify({ recipeId, value, userName: currentUser.userName })
                 });
                 document.getElementById("ratingMsg").innerText = "Puanınız kaydedildi!";
                 document.getElementById("ratingMsg").style.display = "block";
@@ -417,7 +487,11 @@ function setupEvents() {
             filterAndRender();
         });
     });
-    themeToggleBtn.addEventListener("click", toggleTheme);
+    themeToggleBtn.addEventListener("click", () => {
+        const isDark = document.body.classList.toggle("dark-theme");
+        themeIcon.className = isDark ? "bi bi-sun" : "bi bi-moon-stars";
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
     
     if (ingredientInput && ingredientTags && findRecipesBtn) {
         ingredientInput.addEventListener('keydown', function(e) {
@@ -444,11 +518,89 @@ function setupEvents() {
             }
         };
     }
+
+    if (addIngredientBtn && ingredientInput) {
+        addIngredientBtn.onclick = function() {
+            let val = ingredientInput.value.trim().toLowerCase();
+            if (val && !ingredients.includes(val)) {
+                ingredients.push(val);
+                ingredientInput.value = '';
+                renderIngredientTags();
+            } else {
+                ingredientInput.value = '';
+            }
+        };
+    }
+
+    closeModalBtn && (closeModalBtn.onclick = closeModal);
+
+    document.getElementById('randomRecipeHeaderBtn') && (document.getElementById('randomRecipeHeaderBtn').onclick = function() {
+        const spinner = document.getElementById('randomRecipeSpinner');
+        if (spinner) spinner.classList.add('spin');
+        setTimeout(() => {
+            if (spinner) spinner.classList.remove('spin');
+            const all = allRecipes;
+            const random = pickRandom(all);
+            if (random) {
+                window.showRecipeModal(random.id);
+            }
+        }, 1000);
+    });
+
+    document.getElementById('navSalads').onclick = function(e) {
+        e.preventDefault();
+        selectedCategory = 'Salatalar';
+        filterAndRender();
+        const recipesSection = document.querySelector('.container.mb-5');
+        if (recipesSection) {
+            recipesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    document.getElementById('navDesserts').onclick = function(e) {
+        e.preventDefault();
+        selectedCategory = 'Tatlılar';
+        filterAndRender();
+        const recipesSection = document.querySelector('.container.mb-5');
+        if (recipesSection) {
+            recipesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+    document.getElementById('navMeals').onclick = function(e) {
+        e.preventDefault();
+        selectedCategory = 'Yemekler';
+        filterAndRender();
+        const recipesSection = document.querySelector('.container.mb-5');
+        if (recipesSection) {
+            recipesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 }
 
-function applySearch() {
+async function applySearch() {
     searchTerm = searchInput.value.trim();
-    filterAndRender();
+    if (!searchTerm) {
+        await fetchRecipes();
+        return;
+    }
+    try {
+        loadingDiv.style.display = "block";
+        recipesRow.innerHTML = "";
+        const res = await fetch(`${API_URL}/search?term=${encodeURIComponent(searchTerm)}`);
+        if (!res.ok) throw new Error("Arama başarısız");
+        const data = await res.json();
+        filteredRecipes = data;
+        renderRecipes();
+    } catch (e) {
+        recipesRow.innerHTML = "<div class='text-danger text-center'>Arama sırasında hata oluştu.</div>";
+    } finally {
+        loadingDiv.style.display = "none";
+        // Sonuçlar geldikten sonra tarifler bölümüne kaydır
+        const recipesSection = document.querySelector('.container.mb-5');
+        if (recipesSection) {
+            recipesSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
 }
 
 function filterAndRender() {
@@ -462,11 +614,6 @@ function filterAndRender() {
         return matchesCategory && matchesSearch;
     });
     renderRecipes();
-}
-
-function toggleTheme() {
-    const isDark = document.body.classList.toggle("dark-theme");
-    themeIcon.className = isDark ? "bi bi-sun" : "bi bi-moon-stars";
 }
 
 function renderIngredientTags() {
@@ -500,4 +647,330 @@ function toggleFavorite(id) {
 
 function isFavorite(id) {
     return favoriteIds.includes(id);
-} 
+}
+
+function openProfileModal(type) {
+    const modal = document.getElementById('profileModal');
+    const body = document.getElementById('profileModalBody');
+    if (type === 'profile') {
+        body.innerHTML = `<h4>Profilim</h4><div>Kullanıcı adı: <b>${currentUser.userName}</b><br>E-posta: <b>${currentUser.email}</b></div>`;
+    } else if (type === 'favorites') {
+        // Favori tarifleri bul
+        const favRecipes = allRecipes.filter(r => isFavorite(r.id));
+        if (favRecipes.length === 0) {
+            body.innerHTML = `<h4>Favorilerim</h4><div>Henüz favori tarifin yok.</div>`;
+        } else {
+            body.innerHTML = `<h4>Favorilerim</h4><ul style='padding-left:0; list-style:none;'>${favRecipes.map(r => `<li style='margin-bottom:10px;'><a href='#' class='fav-recipe-link' data-id='${r.id}' style='text-decoration:none; color:#ff9800; font-weight:bold;'>${r.title}</a></li>`).join('')}</ul>`;
+            // Tarif adına tıklanınca detay modalı aç
+            setTimeout(() => {
+                document.querySelectorAll('.fav-recipe-link').forEach(link => {
+                    link.onclick = function(e) {
+                        e.preventDefault();
+                        document.getElementById('profileModal').style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        showRecipeModal(parseInt(this.getAttribute('data-id')));
+                    };
+                });
+            }, 0);
+        }
+    } else if (type === 'comments') {
+        body.innerHTML = `<h4>Yaptığım Yorumlar</h4><div class='text-muted'>Yorumlar yükleniyor...</div>`;
+        // Tüm tariflerde kullanıcının yaptığı yorumları bul
+        let userComments = [];
+        for (const recipe of allRecipes) {
+            if (recipe.comments && Array.isArray(recipe.comments)) {
+                for (const comment of recipe.comments) {
+                    if (comment.userName && comment.userName === currentUser.userName) {
+                        userComments.push({
+                            recipeId: recipe.id,
+                            recipeTitle: recipe.title,
+                            content: comment.content,
+                            createdAt: comment.createdAt
+                        });
+                    }
+                }
+            }
+        }
+        if (userComments.length === 0) {
+            body.innerHTML = `<h4>Yaptığım Yorumlar</h4><div>Henüz yorumun yok.</div>`;
+        } else {
+            body.innerHTML = `<h4>Yaptığım Yorumlar</h4><ul style='padding-left:0; list-style:none;'>${userComments.map(c => `<li style='margin-bottom:14px;'><a href='#' class='comment-recipe-link' data-id='${c.recipeId}' style='font-weight:bold; color:#ff9800;'>${c.recipeTitle}</a><br><span style='font-size:0.95em; color:#555;'>${c.content}</span><br><span style='font-size:0.85em; color:#aaa;'>${new Date(c.createdAt).toLocaleString('tr-TR')}</span></li>`).join('')}</ul>`;
+            setTimeout(() => {
+                document.querySelectorAll('.comment-recipe-link').forEach(link => {
+                    link.onclick = function(e) {
+                        e.preventDefault();
+                        document.getElementById('profileModal').style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        showRecipeModal(parseInt(this.getAttribute('data-id')));
+                    };
+                });
+            }, 0);
+        }
+    } else if (type === 'rated') {
+        // Tüm tariflerde kullanıcının puanladığı tarifleri bul
+        let ratedRecipes = [];
+        for (const recipe of allRecipes) {
+            if (recipe.ratings && Array.isArray(recipe.ratings)) {
+                for (const rating of recipe.ratings) {
+                    if (rating.userName && rating.userName === currentUser.userName) {
+                        ratedRecipes.push({
+                            recipeId: recipe.id,
+                            recipeTitle: recipe.title,
+                            value: rating.value,
+                            createdAt: rating.createdAt
+                        });
+                    }
+                }
+            }
+        }
+        if (ratedRecipes.length === 0) {
+            body.innerHTML = `<h4>Puanladığım Tarifler</h4><div>Henüz puanladığın tarif yok.</div>`;
+        } else {
+            body.innerHTML = `<h4>Puanladığım Tarifler</h4><ul style='padding-left:0; list-style:none;'>${ratedRecipes.map(r => `<li style='margin-bottom:14px;'><a href='#' class='rated-recipe-link' data-id='${r.recipeId}' style='font-weight:bold; color:#ff9800;'>${r.recipeTitle}</a> <span style='color:#ffc107;'>(Puan: ${r.value})</span><br><span style='font-size:0.85em; color:#aaa;'>${new Date(r.createdAt).toLocaleString('tr-TR')}</span></li>`).join('')}</ul>`;
+            setTimeout(() => {
+                document.querySelectorAll('.rated-recipe-link').forEach(link => {
+                    link.onclick = function(e) {
+                        e.preventDefault();
+                        document.getElementById('profileModal').style.display = 'none';
+                        document.body.style.overflow = 'auto';
+                        showRecipeModal(parseInt(this.getAttribute('data-id')));
+                    };
+                });
+            }, 0);
+        }
+    }
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+}
+
+document.getElementById('closeProfileModal').onclick = function() {
+    document.getElementById('profileModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+};
+
+// Sayfa yüklenince tema durumunu uygula
+window.addEventListener('DOMContentLoaded', () => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeIcon.className = "bi bi-sun";
+    } else {
+        document.body.classList.remove('dark-theme');
+        themeIcon.className = "bi bi-moon-stars";
+    }
+});
+
+// --- Kalori Hesaplama Özelliği (Sekmeli) ---
+
+// Dinamik olarak API'den kalori çeken fonksiyon
+async function getCalorieFromApi(ingredient) {
+    try {
+        const res = await fetch(`http://localhost:5111/api/calories/${encodeURIComponent(ingredient)}`);
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data.kcalPer100g;
+    } catch {
+        return null;
+    }
+}
+
+// Malzeme ile hesaplama (artık dinamik ve asenkron)
+document.getElementById('calorieFormIngredient').onsubmit = async function(e) {
+    e.preventDefault();
+    console.log('Malzeme ile hesaplama formu submit edildi!');
+    let portion = parseInt(document.getElementById('caloriePortion').value);
+    if (!portion || portion < 1) portion = 1;
+    let total = 0;
+    let missing = [];
+    for (const item of calorieIngredients) {
+        const name = item.name.trim().toLowerCase();
+        const amount = parseFloat(item.amount);
+        const unit = item.unit;
+        if (!name || !amount || amount <= 0) continue;
+        let kcalPer100g = await getCalorieFromApi(name);
+        if (!kcalPer100g) {
+            missing.push(name);
+            continue;
+        }
+        let kcal = 0;
+        if (unit === 'g') {
+            kcal = (kcalPer100g * amount) / 100;
+        } else if (unit === 'adet') {
+            kcal = (kcalPer100g * amount * 50) / 100;
+        }
+        total += kcal;
+    }
+    let html = '';
+    if (missing.length > 0) {
+        html += `<div class='text-danger mb-2'>Veritabanında bulunamayan malzemeler: <b>${missing.join(', ')}</b></div>`;
+    }
+    html += `<div class='alert alert-info'>Toplam Kalori: <b>${total.toFixed(0)} kcal</b><br>1 Porsiyon: <b>${(total/portion).toFixed(0)} kcal</b></div>`;
+    document.getElementById('calorieResultIngredient').innerHTML = html;
+};
+
+let calorieIngredients = [ { name: '', amount: '', unit: 'g' } ];
+function renderCalorieIngredients() {
+    const container = document.getElementById('calorieIngredients');
+    container.innerHTML = '';
+    calorieIngredients.forEach((item, idx) => {
+        const row = document.createElement('div');
+        row.className = 'd-flex align-items-center mb-2';
+        row.innerHTML = `
+            <input type="text" class="form-control me-2" placeholder="Malzeme (örn: yumurta)" value="${item.name}" data-idx="${idx}" data-type="name" style="max-width:160px;">
+            <input type="number" class="form-control me-2" placeholder="Miktar" value="${item.amount}" min="1" data-idx="${idx}" data-type="amount" style="max-width:90px;">
+            <select class="form-select me-2" data-idx="${idx}" data-type="unit" style="max-width:70px;">
+                <option value="g" ${item.unit==='g'?'selected':''}>g</option>
+                <option value="adet" ${item.unit==='adet'?'selected':''}>adet</option>
+            </select>
+            <button type="button" class="btn btn-danger btn-sm" data-idx="${idx}" data-type="remove">&times;</button>
+        `;
+        container.appendChild(row);
+    });
+    // Eventler
+    container.querySelectorAll('input,select').forEach(el => {
+        el.onchange = function() {
+            const idx = +this.getAttribute('data-idx');
+            const type = this.getAttribute('data-type');
+            calorieIngredients[idx][type] = this.value;
+        };
+    });
+    container.querySelectorAll('button[data-type="remove"]').forEach(btn => {
+        btn.onclick = function() {
+            const idx = +this.getAttribute('data-idx');
+            calorieIngredients.splice(idx,1);
+            if (calorieIngredients.length === 0) calorieIngredients.push({ name: '', amount: '', unit: 'g' });
+            renderCalorieIngredients();
+                };
+            });
+}
+document.getElementById('addCalorieIngredient').onclick = function(e) {
+            e.preventDefault();
+    calorieIngredients.push({ name: '', amount: '', unit: 'g' });
+    renderCalorieIngredients();
+};
+
+// Header'daki Kalori Hesapla butonuna işlevsellik ekle
+const openCalorieModalBtnSection = document.getElementById('openCalorieModalBtnSection');
+const calorieModal = document.getElementById('calorieModal');
+openCalorieModalBtnSection && (openCalorieModalBtnSection.onclick = function() {
+    calorieModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    document.getElementById('calorieResultMeal').innerHTML = '';
+    document.getElementById('calorieResultIngredient').innerHTML = '';
+    document.getElementById('calorieMealName').value = '';
+    calorieIngredients = [ { name: '', amount: '', unit: 'g' } ];
+    renderCalorieIngredients();
+    byMealTab.click();
+});
+
+const closeCalorieModalBtn = document.getElementById('closeCalorieModal');
+closeCalorieModalBtn && (closeCalorieModalBtn.onclick = function() {
+    calorieModal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+});
+
+// --- Günün Menüsü ve Kararsızım Özelliği ---
+function getCategoryRecipes(categoryName) {
+    return allRecipes.filter(r => r.category && r.category.name && r.category.name.toLowerCase() === categoryName.toLowerCase());
+}
+
+function pickRandom(arr) {
+    if (!arr.length) return null;
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function getTodayKey() {
+    const now = new Date();
+    return now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate();
+}
+
+function getDailyMenu() {
+    const todayKey = getTodayKey();
+    let dailyMenu = localStorage.getItem('dailyMenu');
+    let dailyMenuDate = localStorage.getItem('dailyMenuDate');
+    if (dailyMenu && dailyMenuDate === todayKey) {
+        return JSON.parse(dailyMenu);
+    }
+    // Yeni gün, yeni menü seç
+    const yemekler = getCategoryRecipes('Yemekler');
+    const salatalar = getCategoryRecipes('Salatalar');
+    const tatlilar = getCategoryRecipes('Tatlılar');
+    const menu = {
+        yemek: pickRandom(yemekler),
+        salata: pickRandom(salatalar),
+        tatli: pickRandom(tatlilar)
+    };
+    localStorage.setItem('dailyMenu', JSON.stringify(menu));
+    localStorage.setItem('dailyMenuDate', todayKey);
+    return menu;
+}
+
+function renderDailyMenuBox() {
+    const box = document.getElementById('dailyMenuBox');
+    if (!box) return;
+    const menu = getDailyMenu();
+    let html = `
+    <div class="modern-menu-card">
+        <div class="modern-menu-title" style="font-size:2rem; font-weight:700;"><i class="bi bi-stars" style="color:#ff9800;"></i> Günün Menüsü</div>
+        <div class="modern-menu-row">
+            <div class="modern-menu-item">
+                <div class="modern-menu-icon">🍲</div>
+                <div class="modern-menu-label">Yemek</div>
+                ${menu.yemek ? `<div class="modern-menu-name">${menu.yemek.title}</div>
+                <img src="${menu.yemek.imageUrl || '/img/default-food.jpg'}" alt="${menu.yemek.title}" class="modern-menu-img">` : '<div>Yok</div>'}
+            </div>
+            <div class="modern-menu-item">
+                <div class="modern-menu-icon">🥗</div>
+                <div class="modern-menu-label">Salata</div>
+                ${menu.salata ? `<div class="modern-menu-name">${menu.salata.title}</div>
+                <img src="${menu.salata.imageUrl || '/img/default-food.jpg'}" alt="${menu.salata.title}" class="modern-menu-img">` : '<div>Yok</div>'}
+            </div>
+            <div class="modern-menu-item">
+                <div class="modern-menu-icon">🍰</div>
+                <div class="modern-menu-label">Tatlı</div>
+                ${menu.tatli ? `<div class="modern-menu-name">${menu.tatli.title}</div>
+                <img src="${menu.tatli.imageUrl || '/img/default-food.jpg'}" alt="${menu.tatli.title}" class="modern-menu-img">` : '<div>Yok</div>'}
+            </div>
+        </div>
+        </div>
+    `;
+    box.innerHTML = html;
+    // Menüdeki yemeğe tıklayınca modal aç
+    [menu.yemek, menu.salata, menu.tatli].forEach(item => {
+        if (item) {
+            const imgs = box.querySelectorAll(`img[alt='${item.title}']`);
+            imgs.forEach(img => {
+                img.style.cursor = 'pointer';
+                img.onclick = () => window.showRecipeModal(item.id);
+            });
+        }
+    });
+}
+
+function renderCalorieBox() {
+    const box = document.getElementById('calorieBox');
+    if (!box) return;
+    box.innerHTML = '';
+}
+
+// Yemek Adı ile hesaplama
+document.getElementById('calorieFormMeal').onsubmit = async function(e) {
+    e.preventDefault();
+    const mealName = document.getElementById('calorieMealName').value.trim().toLowerCase();
+    if (!mealName) return;
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/calories/meal/${encodeURIComponent(mealName)}`);
+        if (!res.ok) {
+            document.getElementById('calorieResultMeal').innerHTML = '<div class="alert alert-danger">Bu yemek için kalori bilgisi bulunamadı.</div>';
+            return;
+        }
+        const data = await res.json();
+        document.getElementById('calorieResultMeal').innerHTML = `
+            <div class="alert alert-info">
+                <b>${mealName}</b> için 1 porsiyon kalori: <b>${data.kcalPerPortion} kcal</b>
+            </div>`;
+    } catch (error) {
+        document.getElementById('calorieResultMeal').innerHTML = '<div class="alert alert-danger">Bir hata oluştu. Lütfen tekrar deneyin.</div>';
+    }
+}; 
