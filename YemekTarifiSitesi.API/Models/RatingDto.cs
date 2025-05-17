@@ -5,6 +5,7 @@ namespace YemekTarifiSitesi.API.Models
         public int Id { get; set; }
         public int RecipeId { get; set; }
         public int Value { get; set; }
+        public string? UserName { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 } 

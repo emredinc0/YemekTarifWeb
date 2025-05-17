@@ -17,6 +17,12 @@ namespace YemekTarifiSitesi.API.Models
         public DateTime UpdatedAt { get; set; }
         public int CategoryId { get; set; }
         public CategoryDto Category { get; set; } = null!;
+        public List<CommentDto> Comments { get; set; } = new();
+        public List<RatingDto> Ratings { get; set; } = new();
+        public string Difficulty { get; set; } = "Kolay";
+        public int Duration { get; set; } = 30;
+        public decimal Cost { get; set; } = 0;
+        public int Servings { get; set; } = 4;
     }
 
     public class CategoryDto

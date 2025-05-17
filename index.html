@@ -239,6 +239,448 @@
             background: #ff9800 !important;
             color: #fff !important;
         }
+        /* Gece modu için kullanıcı alanı ve menü yazılarını düzelt */
+        .dark-theme #userArea,
+        .dark-theme #userArea .btn,
+        .dark-theme #userArea .dropdown-toggle {
+            color: #fff !important;
+            background: #232323 !important;
+            border-color: #444 !important;
+        }
+        .dark-theme #userArea .dropdown-menu {
+            background: #232323 !important;
+            color: #fff !important;
+        }
+        .dark-theme #userArea .dropdown-item {
+            color: #fff !important;
+        }
+        .dark-theme #userArea .dropdown-item:hover {
+            background: #333 !important;
+            color: #ffc107 !important;
+        }
+        /* AI chat related styles removed */
+
+        #dailyMenuBox {
+            background: none !important;
+            background-image: none !important;
+            box-shadow: none !important;
+        }
+        #dailyMenuBox .modern-menu-card,
+        #dailyMenuBox .modern-menu-row,
+        #dailyMenuBox .modern-menu-item {
+            background: none !important;
+            background-image: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        #dailyMenuBox .modern-menu-card::before {
+            display: none !important;
+        }
+        #dailyMenuBox .modern-menu-title,
+        #dailyMenuBox .modern-menu-row {
+            position: relative;
+            z-index: 1;
+        }
+        #dailyMenuBox .modern-menu-row {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+        #dailyMenuBox .modern-menu-item {
+            flex: 1 1 0;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 2px 12px rgba(255,168,0,0.10);
+            padding: 1.2rem 1rem 1.5rem 1rem;
+            text-align: center;
+            margin: 0;
+            transition: box-shadow 0.2s, transform 0.2s;
+            position: relative;
+            min-width: 0;
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+        #dailyMenuBox .modern-menu-item:not(:last-child) {
+            border-right: 2px solid #ffe0c3;
+        }
+        #dailyMenuBox .modern-menu-img {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-bottom: 0.7rem;
+            box-shadow: 0 2px 12px rgba(255,168,0,0.10);
+            border: 4px solid #fffbe7;
+            transition: transform 0.2s;
+        }
+        #dailyMenuBox .modern-menu-item:hover .modern-menu-img {
+            transform: scale(1.08);
+        }
+        #dailyMenuBox .modern-menu-label {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ff9800;
+            margin-bottom: 0.3rem;
+            letter-spacing: 0.5px;
+        }
+        #dailyMenuBox .modern-menu-name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.2rem;
+        }
+        #dailyMenuBox .modern-menu-icon {
+            font-size: 2.1rem;
+            margin-bottom: 0.2rem;
+            color: #ff9800;
+        }
+        #dailyMenuBox .modern-menu-btn {
+            margin-top: 2rem;
+            display: inline-block;
+            background: linear-gradient(90deg, #ff9800 0%, #ffc107 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.15rem;
+            border: none;
+            border-radius: 24px;
+            padding: 0.9rem 2.2rem;
+            box-shadow: 0 2px 8px rgba(255,168,0,0.10);
+            transition: background 0.2s, transform 0.2s;
+        }
+        #dailyMenuBox .modern-menu-btn:hover {
+            background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* Hero section başlığına görsel ekle */
+        .hero-section .hero-title-img {
+            width: 54px;
+            height: 54px;
+            object-fit: contain;
+            margin-right: 12px;
+            vertical-align: middle;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            background: #fffbe7;
+        }
+
+        #calorieBox {
+            background: none !important;
+            background-image: none !important;
+            box-shadow: none !important;
+        }
+        #calorieBox .modern-calorie-card,
+        #calorieBox .modern-calorie-desc,
+        #calorieBox .modern-calorie-title,
+        #calorieBox .modern-calorie-btn {
+            background: none !important;
+            background-image: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        #calorieBox .modern-calorie-card::before {
+            display: none !important;
+        }
+        #calorieBox .modern-calorie-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ff9800;
+            letter-spacing: 1px;
+            margin-bottom: 1.2rem;
+            text-align: center;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        }
+        #calorieBox .modern-calorie-desc {
+            font-size: 1.1rem;
+            color: #444;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        #calorieBox .modern-calorie-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 32px auto 0 auto;
+            background: linear-gradient(90deg, #ff9800 0%, #ffc107 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.4rem;
+            border: none;
+            border-radius: 28px;
+            padding: 1.2rem 3.5rem;
+            box-shadow: 0 2px 8px rgba(255,168,0,0.18);
+            width: 100%;
+            max-width: 340px;
+            text-align: center;
+            transition: background 0.2s, transform 0.2s;
+        }
+        #calorieBox .modern-calorie-btn:hover {
+            background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%);
+            color: #fff;
+            transform: scale(1.05);
+        }
+        @media (max-width: 600px) {
+            #calorieBox .modern-calorie-btn {
+                font-size: 1.1rem;
+                padding: 1rem 1.2rem;
+                max-width: 95vw;
+            }
+        }
+
+        #dailyMenuBox .modern-menu-title {
+            color: #fff !important;
+        }
+        #dailyMenuBox .modern-menu-name {
+            white-space: nowrap;
+            display: inline-block;
+            text-align: center;
+        }
+        #dailyMenuBox .modern-menu-label, #calorieBox .modern-calorie-desc {
+            color: #ff9800 !important;
+        }
+        #dailyMenuBox .modern-menu-icon, #calorieBox .modern-calorie-title i {
+            color: #ff9800 !important;
+        }
+        #dailyMenuBox .modern-menu-btn, #calorieBox .modern-calorie-btn {
+            background: linear-gradient(90deg, #ff9800 0%, #ffc107 100%) !important;
+            color: #fff !important;
+            border: none !important;
+        }
+        #dailyMenuBox .modern-menu-btn:hover, #calorieBox .modern-calorie-btn:hover {
+            background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%) !important;
+            color: #fff !important;
+        }
+
+        /* Kalori Hesapla modalındaki Hesapla butonu ana renklerde olsun */
+        #calorieFormMeal .btn-success, #calorieFormIngredient .btn-success {
+            background: linear-gradient(90deg, #ff9800 0%, #ffc107 100%) !important;
+            color: #fff !important;
+            border: none !important;
+            font-weight: 700;
+            font-size: 1.15rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(255,168,0,0.10);
+            transition: background 0.2s, transform 0.2s;
+        }
+        #calorieFormMeal .btn-success:hover, #calorieFormIngredient .btn-success:hover {
+            background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%) !important;
+            color: #fff !important;
+            transform: scale(1.03);
+        }
+
+        /* Header'daki Kalori Hesapla butonunu kaldır ve kullanıcı butonunu ana renklerde yap */
+        .d-flex.align-items-center.ms-4 > #openCalorieModalBtn { display: none !important; }
+        #userArea .btn-outline-dark, #userArea .dropdown-toggle {
+            background: linear-gradient(90deg, #ff9800 0%, #ffc107 100%) !important;
+            color: #fff !important;
+            border: none !important;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-radius: 12px !important;
+            box-shadow: 0 2px 8px rgba(255,168,0,0.10);
+            transition: background 0.2s, transform 0.2s;
+        }
+        #userArea .btn-outline-dark:hover, #userArea .dropdown-toggle:hover {
+            background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%) !important;
+            color: #fff !important;
+            transform: scale(1.03);
+        }
+        #userArea .btn-outline-dark .bi, #userArea .dropdown-toggle .bi {
+            color: #fff !important;
+            fill: #fff !important;
+            stroke: #fff !important;
+        }
+        #userArea .btn-outline-dark svg, #userArea .dropdown-toggle svg {
+            color: #fff !important;
+            fill: #fff !important;
+            stroke: #fff !important;
+        }
+
+        #randomRecipeHeaderBtn, #userArea .btn-outline-dark, #userArea .dropdown-toggle {
+            height: 48px !important;
+            min-height: 48px !important;
+            display: flex !important;
+            align-items: center !important;
+            padding-top: 0 !important;
+            padding-bottom: 0 !important;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff !important;
+        }
+        #randomRecipeHeaderBtn span, #userArea .btn-outline-dark b, #userArea .dropdown-toggle b {
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            color: #fff !important;
+        }
+        #randomRecipeHeaderBtn svg, #userArea .btn-outline-dark svg, #userArea .dropdown-toggle svg {
+            height: 22px;
+            width: 22px;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        #randomRecipeHeaderBtn:hover {
+            background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%) !important;
+            color: #fff !important;
+            transform: scale(1.03);
+        }
+        #randomRecipeHeaderBtn .spin {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Modern hero tarzı Günün Menüsü ve Kalori Hesapla için kutusuz, doğrudan arka plan üstünde içerik */
+        #dailyMenuSection, #calorieSection {
+            background: #222;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 420px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 64px 0 64px 0;
+            border-radius: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+        }
+        #dailyMenuSection .modern-menu-card,
+        #calorieSection .modern-calorie-card {
+            background: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: none !important;
+        }
+        #dailyMenuSection .modern-menu-title,
+        #calorieSection .modern-calorie-title {
+            color: #fff;
+            font-size: 2.8rem;
+            font-weight: 800;
+            text-align: center;
+            text-shadow: 0 2px 12px #000, 0 1px 0 #fff2;
+            margin-bottom: 32px;
+            letter-spacing: 1px;
+        }
+        #dailyMenuSection .modern-menu-row,
+        #calorieSection .modern-calorie-desc {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            background: none;
+            box-shadow: none;
+            padding: 0;
+            color: #fff;
+            text-shadow: 0 2px 8px #000;
+        }
+        #dailyMenuSection .modern-menu-item,
+        #calorieSection .modern-calorie-desc {
+            background: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 0 24px !important;
+            color: #fff !important;
+            text-align: center;
+        }
+        #dailyMenuSection .modern-menu-label,
+        #dailyMenuSection .modern-menu-name,
+        #calorieSection .modern-calorie-title {
+            color: #fff !important;
+            text-shadow: 0 2px 8px #000;
+        }
+        #dailyMenuSection .modern-menu-img,
+        #calorieSection .modern-calorie-img {
+            border-radius: 50%;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+            border: 4px solid #fff3;
+            margin-bottom: 12px;
+        }
+        #dailyMenuSection .modern-menu-btn,
+        #calorieSection .modern-calorie-btn {
+            background: linear-gradient(90deg, #ff9800 0%, #ffc107 100%);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 24px;
+            padding: 1rem 2.5rem;
+            box-shadow: 0 2px 8px rgba(255,168,0,0.18);
+            margin-top: 32px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        #dailyMenuSection .modern-menu-btn:hover,
+        #calorieSection .modern-calorie-btn:hover {
+            background: linear-gradient(90deg, #ffc107 0%, #ff9800 100%);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        #mainFeatureSection {
+            background: #222;
+            background-image: url('/img/gunun-menusu-bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 700px;
+            border-radius: 32px;
+            padding: 64px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 48px;
+        }
+        #dailyMenuBox, #calorieBox {
+            background: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .hero-content-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .hero-calc-btn {
+            margin-top: 12px;
+            margin-bottom: 0;
+            width: 100%;
+            max-width: 340px;
+        }
+
+        .calorie-header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .calorie-calc-btn {
+            margin-top: 12px;
+            margin-bottom: 0;
+            width: 100%;
+            max-width: 340px;
+        }
     </style>
 </head>
 <body class="light-theme">
@@ -249,34 +691,68 @@
                 <a class="navbar-brand m-0 d-flex align-items-center justify-content-center" href="#" style="height:120px; padding:0; margin-left:32px;">
                     <img src="img/logo.png" alt="Pişir Logo" style="height:120px; width:auto; display:block; object-fit:contain; margin:0; padding:0;">
                 </a>
-                <form class="flex-grow-1 d-flex align-items-center" style="max-width:600px; margin-left:32px;">
+                <form class="flex-grow-1 d-flex align-items-center" style="max-width:1100px; width:100%; margin-left:32px;">
                     <input type="text" class="form-control form-control-lg" placeholder="Tarif, malzeme veya kategori ara..." aria-label="Tarif ara" id="searchInput" style="border-radius:24px 0 0 24px; border-right:0;">
                     <button class="btn btn-warning d-flex align-items-center justify-content-center" type="button" id="searchBtn" style="border-radius:0 24px 24px 0; padding:0 24px; font-size:1.3rem; height:48px; background:#ffc107; color:#333;"><i class="bi bi-search"></i></button>
                 </form>
                 <nav class="d-flex align-items-center gap-3 ms-4">
-                    <a class="nav-link active px-3" href="#">Anasayfa</a>
-                    <a class="nav-link px-3" href="#tatlilar">Tatlılar</a>
-                    <a class="nav-link px-3" href="#yemekler">Yemekler</a>
-                    <a class="nav-link px-3" href="#hakkinda">Hakkında</a>
-                    <button class="btn btn-outline-secondary ms-3" id="themeToggleBtn" title="Gece/Gündüz Modu">
-                        <i class="bi bi-moon-stars" id="themeIcon"></i>
-                    </button>
+                    <a class="nav-link px-3" href="?category=Tatlılar" target="_blank" id="navDesserts">Tatlılar</a>
+                    <a class="nav-link px-3" href="?category=Yemekler" target="_blank" id="navMeals">Yemekler</a>
+                    <a class="nav-link px-3" href="?category=Salatalar" target="_blank" id="navSalads">Salatalar</a>
                 </nav>
-                <div id="userArea" class="ms-4">
-                    <button class="btn btn-primary" id="loginBtn">Giriş Yap / Kayıt Ol</button>
+                <div class="d-flex align-items-center ms-4" style="gap:12px;">
+                    <button class="btn btn-warning" id="randomRecipeHeaderBtn" style="font-weight:bold; display:flex; align-items:center; gap:8px;">
+                        <span id="randomRecipeSpinner" style="display:inline-block; transition:transform 0.5s;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#fff" stroke-width="3" opacity="0.3"/><path d="M12 2a10 10 0 0 1 10 10" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg></span>
+                        <span>Rastgele Tarif</span>
+                    </button>
+                    <button class="btn btn-warning" id="openCalorieModalBtn" style="font-weight:bold; display:flex; align-items:center; gap:8px;">
+                        <i class="bi bi-fire" style="font-size:1.3rem;"></i>
+                        <span>Kalori Hesapla</span>
+                    </button>
+                    <div id="userArea" class="position-relative" style="z-index:10001;"></div>
+                    <button id="themeToggleBtn" class="btn btn-outline-secondary" style="height:48px; width:48px; display:flex; align-items:center; justify-content:center;" type="button">
+                        <i id="themeIcon" class="bi bi-moon-stars"></i>
+                    </button>
                 </div>
             </div>
         </header>
 
-        <!-- Hero Alanı -->
-        <section class="hero-section d-flex flex-column align-items-center justify-content-center text-center py-5" style="position:relative; min-height:400px; background: url('img/hero-food.jpg') center center/cover no-repeat;">
-            <div style="position:relative; z-index:2; width:100%;">
-                <div style="font-size:2rem; font-weight:700; color:#fff; text-shadow:0 2px 8px #000; margin-bottom:18px; letter-spacing:0.5px;">Evdeki malzemelerinizi seçin, Size tarif önerelim</div>
-                <div style="max-width:600px; margin:0 auto;">
-                    <input type="text" id="ingredientInput" class="form-control" placeholder="Malzeme ekle ve Enter'a bas" style="margin-bottom:18px;">
-                    <div id="ingredientTags" style="margin:8px 0;"></div>
-                    <button id="findRecipesBtn" class="btn btn-warning w-100" style="max-width:300px; margin:18px auto 0 auto; display:block;">Tarifi Gör</button>
+        <!-- Günün Menüsü ve Kalori Hesapla bölümlerini eski haline döndür -->
+        <section id="dailyMenuSection" style="background: #fff7e6; border-radius: 32px; padding: 0; position: relative; min-height:400px; height:400px; background-image: url('/img/gunun-menusu-bg.png'); background-repeat: no-repeat; background-size: cover; background-position: center; width:100vw; margin-left:calc(50% - 50vw); border-radius:32px; margin-bottom:40px;">
+            <div class="d-flex flex-column align-items-center justify-content-center gap-4" style="height:100%; min-height:400px;">
+                <div id="dailyMenuBox" style="width:100%; max-width:600px; margin-bottom:32px;">
+                    <div class="modern-menu-title" style="font-size:2rem; font-weight:700;"><i class="bi bi-stars" style="color:#ff9800;"></i> Günün Menüsü</div>
                 </div>
+            </div>
+        </section>
+        <section id="calorieSection" style="background: #fff7e6; border-radius: 32px; padding: 0; position: relative; min-height:400px; height:400px; background-image: url('/img/kalori-bg.png'); background-repeat: no-repeat; background-size: cover; background-position: center; width:100vw; margin-left:calc(50% - 50vw); border-radius:32px; margin-bottom:40px;">
+            <div class="d-flex flex-column align-items-center justify-content-center gap-4" style="height:100%; min-height:400px;">
+                <div class="calorie-header-content" style="width:100%; max-width:700px; margin:0 auto 24px auto; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                    <h1 class="calorie-title" style="font-size:2rem; font-weight:700; color:#fff; text-shadow:0 2px 8px #000; margin-bottom:14px; letter-spacing:0.5px;">
+                        <i class='bi bi-fire' style='color:#ff9800; margin-right:8px;'></i> Kalori Hesapla
+                    </h1>
+                    <div class="calorie-desc" style="font-size:1.3rem; color:#fff; margin-bottom:8px; text-shadow:0 2px 8px #000;">
+                        Yemek, salata veya tatlıların ortalama kalorisini kolayca öğrenin.<br>
+                        Malzeme veya yemek adı ile hesaplama yapabilirsiniz.
+                    </div>
+                    <button class="btn btn-warning calorie-calc-btn" id="openCalorieModalBtnSection" style="margin-top:12px; font-size:1.15rem; font-weight:700; padding:0.8rem 2rem; border-radius:24px; box-shadow:0 2px 8px rgba(255,168,0,0.18); width:100%; max-width:260px;">
+                        <i class="bi bi-calculator"></i> Kalori Hesapla
+                    </button>
+                </div>
+                <div id="calorieBox" style="width:100%; max-width:600px;"></div>
+            </div>
+        </section>
+
+        <!-- Hero Alanı -->
+        <section class="hero-section d-flex flex-column align-items-center justify-content-center text-center py-5" style="position:relative; min-height:400px; background: url('img/hero-food.jpg') center center/cover no-repeat; border-radius:32px; margin-bottom:40px;">
+            <div style="position:relative; z-index:2; width:100%;">
+                <div style="font-size:2rem; font-weight:700; color:#fff; text-shadow:0 2px 8px #000; margin-bottom:18px; letter-spacing:0.5px;"><i class="bi bi-basket" style="color:#ff9800; margin-right:10px;"></i>Evdeki malzemelerinizi <span style='color:#fff;'>ekleyin</span>, Size tarif önerelim</div>
+                <div style="max-width:600px; margin:0 auto; display:flex; gap:8px; align-items:center;">
+                    <input type="text" id="ingredientInput" class="form-control" placeholder="Malzeme ekle" style="margin-bottom:18px; flex:1;">
+                    <button id="addIngredientBtn" class="btn btn-warning" style="margin-bottom:18px; font-size:1.5rem; padding:0 18px;">+</button>
+                </div>
+                <div id="ingredientTags" style="margin:8px 0;"></div>
+                <button id="findRecipesBtn" class="btn btn-warning w-100" style="max-width:300px; margin:18px auto 0 auto; display:block;">Tarifi Gör</button>
             </div>
         </section>
 
@@ -330,7 +806,7 @@
                         <div class="tab-pane fade show active" id="loginTabPane" role="tabpanel">
                             <form id="loginForm">
                                 <div class="mb-3">
-                                    <input type="email" class="form-control" id="loginEmail" placeholder="E-posta" required>
+                                    <input type="text" class="form-control" id="loginEmail" placeholder="E-posta veya Kullanıcı Adı" required>
                                 </div>
                                 <div class="mb-3">
                                     <input type="password" class="form-control" id="loginPassword" placeholder="Şifre" required>
@@ -359,19 +835,68 @@
             </div>
         </div>
 
+        <!-- Profil/Favoriler/Yorumlar/Beğeniler Modalı -->
+        <div class="modal-bg" id="profileModal" style="display:none;">
+            <div class="modal-content-custom" style="max-width:500px;">
+                <button class="close-btn" id="closeProfileModal">&times;</button>
+                <div class="modal-body" id="profileModalBody"></div>
+            </div>
+        </div>
+
         <!-- Footer -->
-        <footer class="footer mt-auto py-3 bg-light text-center">
+        <footer class="footer mt-auto py-3 bg-light text-center" id="aboutSection">
             <div class="container">
                 <img src="img/logo.png" alt="Logo" style="height:80px; margin-bottom:10px;">
                 <div class="mb-2">
-                    <a href="#" class="text-secondary me-3"><i class="bi bi-instagram"></i></a>
-                    <a href="#" class="text-secondary me-3"><i class="bi bi-twitter-x"></i></a>
-                    <a href="#" class="text-secondary me-3"><i class="bi bi-facebook"></i></a>
-                    <a href="#" class="text-secondary"><i class="bi bi-youtube"></i></a>
+                    <a href="https://www.instagram.com/emre0sir/" class="text-secondary me-3" target="_blank"><i class="bi bi-instagram"></i></a>
+                    <a href="https://www.facebook.com/firatedutr" class="text-secondary me-3" target="_blank"><i class="bi bi-facebook"></i></a>
+                    <a href="https://www.youtube.com/@emredinc721" class="text-secondary" target="_blank"><i class="bi bi-youtube"></i></a>
                 </div>
-                <div class="text-muted">&copy; 2024 PİŞİR. Tüm hakları saklıdır.</div>
+                <div class="text-muted">&copy; 2025 PİŞİR. Tüm hakları saklıdır.</div>
             </div>
         </footer>
+    </div>
+
+    <!-- Kalori Hesaplama Modalı -->
+    <div class="modal-bg" id="calorieModal" style="display:none;">
+        <div class="modal-content-custom" style="max-width:500px;">
+            <button class="close-btn" id="closeCalorieModal">&times;</button>
+            <div class="modal-body">
+                <h3 class="modal-title-modern mb-3">Kalori Hesapla</h3>
+                <ul class="nav nav-tabs mb-3" id="calorieTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="byMealTab" data-bs-toggle="tab" data-bs-target="#byMealPane" type="button" role="tab">Yemek Adı ile</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="byIngredientTab" data-bs-toggle="tab" data-bs-target="#byIngredientPane" type="button" role="tab">Malzeme ile</button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="calorieTabContent">
+                    <div class="tab-pane fade show active" id="byMealPane" role="tabpanel">
+                        <form id="calorieFormMeal">
+                            <div class="mb-3">
+                                <label for="calorieMealName" class="form-label">Yemek Adı</label>
+                                <input type="text" class="form-control" id="calorieMealName" placeholder="örn: tavuklu pilav" required>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Hesapla</button>
+                        </form>
+                        <div id="calorieResultMeal" class="mt-4"></div>
+                    </div>
+                    <div class="tab-pane fade" id="byIngredientPane" role="tabpanel">
+                        <form id="calorieFormIngredient">
+                            <div id="calorieIngredients"></div>
+                            <button type="button" class="btn btn-warning w-100 mb-3" id="addCalorieIngredient">+ Malzeme Ekle</button>
+                            <div class="mb-3">
+                                <label for="caloriePortion" class="form-label">Porsiyon Sayısı</label>
+                                <input type="number" class="form-control" id="caloriePortion" value="1" min="1">
+                            </div>
+                            <button type="submit" class="btn btn-success w-100">Hesapla</button>
+                        </form>
+                        <div id="calorieResultIngredient" class="mt-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

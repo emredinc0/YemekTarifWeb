@@ -47,9 +47,10 @@ namespace YemekTarifiSitesi.API.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserLoginDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(u => 
+                u.Email == dto.EmailOrUserName || u.UserName == dto.EmailOrUserName);
             if (user == null || !VerifyPassword(dto.Password, user.PasswordHash))
-                return Unauthorized(new { message = "E-posta veya şifre hatalı." });
+                return Unauthorized(new { message = "E-posta/Kullanıcı adı veya şifre hatalı." });
             var token = GenerateJwtToken(user);
             return Ok(new { token, user = new { user.Id, user.UserName, user.Email } });
         }

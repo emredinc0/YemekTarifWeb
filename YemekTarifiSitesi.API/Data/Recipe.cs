@@ -23,5 +23,9 @@ namespace YemekTarifiSitesi.API.Data
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
         public ICollection<Comment> Comments { get; set; } = new List<Comment>();
         public ICollection<Rating> Ratings { get; set; } = new List<Rating>();
+        public string Difficulty { get; set; } = "Kolay";
+        public int Duration { get; set; } = 30; // dakika
+        public decimal Cost { get; set; } = 0; // TL
+        public int Servings { get; set; } = 4; // Kaç kişilik
     }
 } 

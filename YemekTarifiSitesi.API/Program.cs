@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using YemekTarifiSitesi.API.Data;
-using YemekTarifiSitesi.API.Services;
-using OpenAI.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -19,11 +17,6 @@ builder.Services.AddLogging(logging =>
 
 // Add services to the container.
 builder.Services.AddControllers();
-
-// OpenAI servis kaydı
-builder.Services.AddOpenAIService(settings => { 
-    settings.ApiKey = builder.Configuration["OpenAI:ApiKey"];
-});
 
 // Database bağlantısı
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -64,8 +57,6 @@ builder.Services.AddAuthentication(options =>
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 var app = builder.Build();
 

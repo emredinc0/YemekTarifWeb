@@ -31,6 +31,7 @@ namespace YemekTarifiSitesi.API.Controllers
                 Id = r.Id,
                 RecipeId = r.RecipeId,
                 Value = r.Value,
+                UserName = r.UserName,
                 CreatedAt = r.CreatedAt
             }).ToList();
         }
@@ -55,6 +56,7 @@ namespace YemekTarifiSitesi.API.Controllers
             {
                 RecipeId = dto.RecipeId,
                 Value = dto.Value,
+                UserName = dto.UserName,
                 CreatedAt = DateTime.Now
             };
             _context.Ratings.Add(rating);

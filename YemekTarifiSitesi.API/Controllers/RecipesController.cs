@@ -22,7 +22,11 @@ namespace YemekTarifiSitesi.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipes()
         {
-            var recipes = await _context.Recipes.Include(r => r.Category).ToListAsync();
+            var recipes = await _context.Recipes
+                .Include(r => r.Category)
+                .Include(r => r.Comments)
+                .Include(r => r.Ratings)
+                .ToListAsync();
             return recipes.Select(r => new RecipeDto
             {
                 Id = r.Id,
@@ -44,7 +48,25 @@ namespace YemekTarifiSitesi.API.Controllers
                     Id = r.Category.Id,
                     Name = r.Category.Name,
                     Description = r.Category.Description
-                }
+                },
+                Difficulty = r.Difficulty,
+                Duration = r.Duration,
+                Cost = r.Cost,
+                Servings = r.Servings,
+                Comments = r.Comments.Select(c => new CommentDto {
+                    Id = c.Id,
+                    RecipeId = c.RecipeId,
+                    UserName = c.UserName,
+                    Content = c.Content,
+                    CreatedAt = c.CreatedAt
+                }).ToList(),
+                Ratings = r.Ratings.Select(rt => new RatingDto {
+                    Id = rt.Id,
+                    RecipeId = rt.RecipeId,
+                    Value = rt.Value,
+                    UserName = rt.UserName,
+                    CreatedAt = rt.CreatedAt
+                }).ToList()
             }).ToList();
         }
 
@@ -74,7 +96,11 @@ namespace YemekTarifiSitesi.API.Controllers
                     Id = r.Category.Id,
                     Name = r.Category.Name,
                     Description = r.Category.Description
-                }
+                },
+                Difficulty = r.Difficulty,
+                Duration = r.Duration,
+                Cost = r.Cost,
+                Servings = r.Servings
             };
         }
 
@@ -112,7 +138,11 @@ namespace YemekTarifiSitesi.API.Controllers
                     Id = r.Category.Id,
                     Name = r.Category.Name,
                     Description = r.Category.Description
-                }
+                },
+                Difficulty = r.Difficulty,
+                Duration = r.Duration,
+                Cost = r.Cost,
+                Servings = r.Servings
             }).ToList();
         }
 
@@ -146,7 +176,11 @@ namespace YemekTarifiSitesi.API.Controllers
                     Id = r.Category.Id,
                     Name = r.Category.Name,
                     Description = r.Category.Description
-                }
+                },
+                Difficulty = r.Difficulty,
+                Duration = r.Duration,
+                Cost = r.Cost,
+                Servings = r.Servings
             }).ToList();
         }
 
@@ -195,7 +229,11 @@ namespace YemekTarifiSitesi.API.Controllers
                     Id = r.Category.Id,
                     Name = r.Category.Name,
                     Description = r.Category.Description
-                }
+                },
+                Difficulty = r.Difficulty,
+                Duration = r.Duration,
+                Cost = r.Cost,
+                Servings = r.Servings
             }).ToList();
         }
 

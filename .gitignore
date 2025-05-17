@@ -44,4 +44,8 @@ yarn-error.log
 # IDE
 .idea/
 *.swp
-*.swo 
+*.swo
+
+# Sensitive config files
+YemekTarifiSitesi.API/appsettings.Development.json
+YemekTarifiSitesi.API/appsettings.Production.json 

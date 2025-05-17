@@ -1,11 +1,8 @@
-﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YemekTarifiSitesi.API", "YemekTarifiSitesi.API\YemekTarifiSitesi.API.csproj", "{E93EA773-2390-4D53-8746-5DBF9CF0A28B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YemekTarifiSitesi.Admin", "YemekTarifiSitesi.Admin\YemekTarifiSitesi.Admin.csproj", "{052CD2BD-2A95-4762-8317-4B4077B4CCA8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YemekTarifiSitesi.Core", "YemekTarifiSitesi.Core\YemekTarifiSitesi.Core.csproj", "{A60357AF-B7D0-4DA8-B972-D356C80E8702}"
 EndProject
@@ -31,18 +28,6 @@ Global
 		{E93EA773-2390-4D53-8746-5DBF9CF0A28B}.Release|x64.Build.0 = Release|Any CPU
 		{E93EA773-2390-4D53-8746-5DBF9CF0A28B}.Release|x86.ActiveCfg = Release|Any CPU
 		{E93EA773-2390-4D53-8746-5DBF9CF0A28B}.Release|x86.Build.0 = Release|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Debug|x64.Build.0 = Debug|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Debug|x86.Build.0 = Debug|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Release|x64.ActiveCfg = Release|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Release|x64.Build.0 = Release|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Release|x86.ActiveCfg = Release|Any CPU
-		{052CD2BD-2A95-4762-8317-4B4077B4CCA8}.Release|x86.Build.0 = Release|Any CPU
 		{A60357AF-B7D0-4DA8-B972-D356C80E8702}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A60357AF-B7D0-4DA8-B972-D356C80E8702}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A60357AF-B7D0-4DA8-B972-D356C80E8702}.Debug|x64.ActiveCfg = Debug|Any CPU

@@ -1,13 +1,14 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using YemekTarifiSitesi.API.Data;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace YemekTarifiSitesi.API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class IngredientsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -18,36 +19,58 @@ namespace YemekTarifiSitesi.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Ingredient>>> GetIngredients()
+        public IActionResult GetAll()
         {
-            return await _context.Ingredients.ToListAsync();
+            var ingredients = _context.Ingredients.ToList();
+            return Ok(ingredients);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Ingredient>> GetIngredient(int id)
+        public IActionResult GetById(int id)
         {
-            var ingredient = await _context.Ingredients.FindAsync(id);
+            var ingredient = _context.Ingredients.Find(id);
             if (ingredient == null)
                 return NotFound();
-            return ingredient;
+            return Ok(ingredient);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Ingredient>> PostIngredient(Ingredient ingredient)
+        [Authorize]
+        public IActionResult Create([FromBody] Ingredient ingredient)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             _context.Ingredients.Add(ingredient);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetIngredient", new { id = ingredient.Id }, ingredient);
+            _context.SaveChanges();
+            return CreatedAtAction(nameof(GetById), new { id = ingredient.Id }, ingredient);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        public IActionResult Update(int id, [FromBody] Ingredient ingredient)
+        {
+            if (id != ingredient.Id)
+                return BadRequest();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            _context.Entry(ingredient).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            _context.SaveChanges();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteIngredient(int id)
+        [Authorize]
+        public IActionResult Delete(int id)
         {
-            var ingredient = await _context.Ingredients.FindAsync(id);
+            var ingredient = _context.Ingredients.Find(id);
             if (ingredient == null)
                 return NotFound();
+
             _context.Ingredients.Remove(ingredient);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
             return NoContent();
         }
     }
